@@ -27,12 +27,15 @@ html {
   box-shadow: 0 0 40px 40px rgba(255, 255, 255, 0.075) inset;
   height: 90px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center; /* Aligns horizontally in the center */
   align-items: center;
   place-items: center;
 }
 .tv-img-logo {
-  height: 90px;
+  display: flex;
+  max-height: 90px;
+  max-width: calc(33.33% - 20px);
 }
 .embed-responsive .embed-responsive-item,
 .embed-responsive embed,
