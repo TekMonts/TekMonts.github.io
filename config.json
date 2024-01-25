@@ -1,0 +1,29 @@
+{
+  "data": {
+    "fb": {
+      "embed": "./embed.html?link=",
+      "source": "https://watch.ezyproxy.com/v6/?link="
+    },
+    "channels": [
+      "VTV1",
+      "VTV2",
+      "VTV3",
+      "VTV5",
+      "VTV Cần Thơ",
+      "VTC3",
+      "VTC9",
+      "SCTV15",
+      "AXN",
+      "HBO",
+      "Cinemax",
+      "Cartoon Network"
+    ],
+    "tv": {
+      "external": false,
+      "file": "./playlist.data",
+      "usecors": true,
+      "cors": "https://api.allorigins.win/get?url=",
+      "url": "https://playlist.vthanhtivi.pw"
+    }
+  }
+}
