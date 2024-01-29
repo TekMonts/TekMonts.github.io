@@ -19,11 +19,11 @@
       "Cartoon Network"
     ],
     "tv": {
-      "external": false,
+      "external": true,
       "file": "./playlist.data",
-      "usecors": true,
+      "usecors": false,
       "cors": "https://api.allorigins.win/get?url=",
-      "url": "https://playlist.vthanhtivi.pw"
+      "url": "https://phuhdtv.github.io/vietngatv.m3u"
     }
   }
 }
