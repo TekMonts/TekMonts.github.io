@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Voz Spam Cleaner
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/TekMonts/TekMonts.github.io
 // @author       TekMonts
 // @version      1.1
 // @description  Spam cleaning tool for voz.vn
@@ -187,7 +187,7 @@
     async function findNewestMember() {
         return new Promise((resolve, reject) => {
             let searchForNewest = false;
-			let userId = 0;
+            let userId = 0;
 
             const firstMemberElement =
                 document.querySelector('.listHeap li:first-child a') ||
@@ -196,9 +196,9 @@
                 ?.closest('dl')
                 .querySelector('dd a.username');
 
-				const storedRange = localStorage.getItem('latestRange');
-                const latestRange = storedRange ? JSON.parse(storedRange) : null;
-				
+            const storedRange = localStorage.getItem('latestRange');
+            const latestRange = storedRange ? JSON.parse(storedRange) : null;
+
             if (firstMemberElement) {
                 userId = firstMemberElement.getAttribute('data-user-id');
                 console.log(`Newest Member User ID in this page: %c${userId}`, 'background: green; color: white; padding: 2px;');
@@ -214,7 +214,7 @@
             }
 
             if (searchForNewest) {
-				userId = latestRange.latestID;
+                userId = latestRange.latestID;
                 const tab = window.open('https://voz.vn/u/', '_blank');
 
                 if (!tab) {
@@ -608,7 +608,7 @@
         } = addSpamCleanerToNavigation();
 
         async function runCleanSpamer() {
-	    clear();
+            clear();
             if (isRunning) {
                 console.log('Clean process is still running. Skipping...');
                 return;
