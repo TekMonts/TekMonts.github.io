@@ -2,7 +2,7 @@
 // @name         Voz Spam Cleaner
 // @namespace    https://github.com/TekMonts/TekMonts.github.io
 // @author       TekMonts
-// @version      1.3
+// @version      1.5
 // @description  Spam cleaning tool for voz.vn
 // @match        https://voz.vn/*
 // @grant        GM_xmlhttpRequest
@@ -219,16 +219,16 @@
                 const tab = window.open(userPage, '_blank');
 
                 if (!tab) {
-                    reject('Failed to open tab');
-                    return;
+                    console.warn('Failed to open tab');
+                    location.replace(userPage);
                 }
 
                 const checkTabInterval = setInterval(() => {
                     try {
                         if (tab.closed) {
                             clearInterval(checkTabInterval);
-                            reject('Tab was closed unexpectedly');
-                            return;
+                            console.warn('Tab was closed unexpectedly');
+                            location.replace(userPage);
                         }
 
                         if (tab.document.readyState === 'complete') {
@@ -243,7 +243,7 @@
                             } else {
                                 clearInterval(checkTabInterval);
                                 tab.close();
-                                console.error('No member found in the list!');
+                                console.warn('No member found in the list!');
                                 resolve(userId);
                             }
                         }
@@ -538,7 +538,6 @@
                 const [username, link] = item.split(": ");
                 return `%c${username}%c: ${link}`;
             }).join('\n'), ...spamList.flatMap(() => ["color: red; font-weight: bold; padding: 1px;", "color: inherit;"]));
-        console.log("Result:", finalResult);
         return finalResult;
     }
 
