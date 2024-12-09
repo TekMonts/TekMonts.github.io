@@ -2,7 +2,7 @@
 // @name         Voz Spam Cleaner
 // @namespace    https://github.com/TekMonts/TekMonts.github.io
 // @author       TekMonts
-// @version      1.3
+// @version      1.1
 // @description  Spam cleaning tool for voz.vn
 // @match        https://voz.vn/*
 // @grant        GM_xmlhttpRequest
@@ -217,10 +217,10 @@
                 userId = latestRange.latestID;
                 const userPage = 'https://voz.vn/u/';
                 const tab = window.open(userPage, '_blank');
-
                 if (!tab) {
                     console.warn('Failed to open tab');
                     location.replace(userPage);
+                    return;
                 }
 
                 const checkTabInterval = setInterval(() => {
@@ -230,10 +230,8 @@
                             console.warn('Tab was closed unexpectedly');
                             resolve(userId);
                         }
-
                         if (tab.document.readyState === 'complete') {
                             const firstMember = tab.document.querySelector('.listHeap li:first-child a');
-
                             if (firstMember) {
                                 const latestUserId = firstMember.getAttribute('data-user-id');
                                 clearInterval(checkTabInterval);
@@ -251,7 +249,7 @@
                         clearInterval(checkTabInterval);
                         tab.close();
                         console.warn('Error accessing the tab: ' + error.message);
-                        location.replace(userPage);
+                        resolve(userId);
                     }
                 }, 1000);
 
@@ -260,8 +258,8 @@
                     if (!tab.closed) {
                         tab.close();
                     }
-                    console.warn('Timeout while loading new tab, reloading the page...');
-                    location.replace(userPage);
+                    console.warn('Timeout while loading new tab');
+                    resolve(userId);
                 }, 10000);
             }
         });
