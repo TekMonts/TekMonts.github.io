@@ -2,7 +2,7 @@
 // @name         Voz Spam Cleaner
 // @namespace    https://github.com/TekMonts/TekMonts.github.io
 // @author       TekMonts
-// @version      1.5
+// @version      1.3
 // @description  Spam cleaning tool for voz.vn
 // @match        https://voz.vn/*
 // @grant        GM_xmlhttpRequest
@@ -228,7 +228,7 @@
                         if (tab.closed) {
                             clearInterval(checkTabInterval);
                             console.warn('Tab was closed unexpectedly');
-                            location.replace(userPage);
+                            resolve(userId);
                         }
 
                         if (tab.document.readyState === 'complete') {
