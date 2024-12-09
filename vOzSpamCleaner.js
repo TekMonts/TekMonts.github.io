@@ -608,7 +608,7 @@
         } = addSpamCleanerToNavigation();
 
         async function runCleanSpamer() {
-            clear();
+            console.clear();
             if (isRunning) {
                 console.log('Clean process is still running. Skipping...');
                 return;
