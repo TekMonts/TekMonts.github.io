@@ -2,7 +2,7 @@
 // @name         Voz Spam Cleaner
 // @namespace    https://github.com/TekMonts/TekMonts.github.io
 // @author       TekMonts
-// @version      1.1
+// @version      1.3
 // @description  Spam cleaning tool for voz.vn
 // @match        https://voz.vn/*
 // @grant        GM_xmlhttpRequest
@@ -215,7 +215,8 @@
 
             if (searchForNewest) {
                 userId = latestRange.latestID;
-                const tab = window.open('https://voz.vn/u/', '_blank');
+                const userPage = 'https://voz.vn/u/';
+                const tab = window.open(userPage, '_blank');
 
                 if (!tab) {
                     reject('Failed to open tab');
@@ -249,16 +250,18 @@
                     } catch (error) {
                         clearInterval(checkTabInterval);
                         tab.close();
-                        reject('Error accessing the tab: ' + error.message);
+                        console.warn('Error accessing the tab: ' + error.message);
+                        location.replace(userPage);
                     }
-                }, 500);
+                }, 1000);
 
                 setTimeout(() => {
                     clearInterval(checkTabInterval);
                     if (!tab.closed) {
                         tab.close();
                     }
-                    reject('Timeout while loading page');
+                    console.warn('Timeout while loading new tab, reloading the page...');
+                    location.replace(userPage);
                 }, 10000);
             }
         });
@@ -541,7 +544,25 @@
 
     function addSpamCleanerToNavigation() {
         const navList = document.querySelector('.p-nav-list.js-offCanvasNavSource');
-        if (!navList)
+        const footerList = document.querySelector("#footer > div > div.p-footer-row > div.p-footer-row-main > ul");
+        const isUserUsingMobile = () => {
+
+            let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (!isMobile) {
+                let screenWidth = window.screen.width;
+                let screenHeight = window.screen.height;
+                isMobile = (screenWidth <= 800 || screenHeight <= 600);
+            }
+
+            if (!isMobile) {
+                isMobile = (('ontouchstart' in window) || navigator.userAgentData.mobile);
+            }
+
+            return isMobile;
+        }
+
+        if (!navList && !footerList)
             return;
 
         const navItem = document.createElement('li');
@@ -556,25 +577,25 @@
         button.id = 'spam-cleaner-button';
         button.textContent = 'Clean Spamer Now';
         button.style.cssText = `
-        margin-right: 10px; 
-        color: white; 
-        border: none; 
-        padding: 5px 10px; 
-        border-radius: 5px; 
-        background-color: #007bff; 
-        font-size: 12px;
-    `;
+    margin-right: 10px; 
+    color: white; 
+    border: none; 
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    background-color: #007bff; 
+    font-size: 12px;
+`;
 
         const progressTracker = document.createElement('div');
         progressTracker.id = 'voz-spam-cleaner-tracker';
         progressTracker.style.cssText = `
-        display: inline-flex; 
-        align-items: center; 
-        background-color: #f0f0f0; 
-        padding: 5px 10px; 
-        border-radius: 5px; 
-        font-size: 12px;
-    `;
+    display: inline-flex; 
+    align-items: center; 
+    background-color: #f0f0f0; 
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    font-size: 12px;
+`;
 
         const progressText = document.createElement('span');
         progressText.textContent = 'Spam Cleaner: Idle';
@@ -585,7 +606,11 @@
 
         navItem.appendChild(container);
 
-        navList.appendChild(navItem);
+        if (isUserUsingMobile() && footerList) {
+            footerList.appendChild(navItem);
+        } else if (navList) {
+            navList.appendChild(navItem);
+        }
 
         return {
             button,
