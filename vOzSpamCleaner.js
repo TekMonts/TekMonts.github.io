@@ -202,7 +202,7 @@
                 const storedRange = localStorage.getItem('latestRange');
                 const latestRange = storedRange ? JSON.parse(storedRange) : null;
 
-                if (latestRange && latestRange.latestID >= userId) {
+                if (latestRange  && parseInt(userId) <= parseInt(latestRange.latestID)) {
                     searchForNewest = true;
                 } else {
                     resolve(userId);
