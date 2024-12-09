@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Voz Spam Cleaner
 // @namespace    http://tampermonkey.net/
-// @author		   TekMonts
-// @version      1.0
+// @author       TekMonts
+// @version      1.1
 // @description  Spam cleaning tool for voz.vn
 // @match        https://voz.vn/*
 // @grant        GM_xmlhttpRequest
@@ -187,6 +187,7 @@
     async function findNewestMember() {
         return new Promise((resolve, reject) => {
             let searchForNewest = false;
+			let userId = 0;
 
             const firstMemberElement =
                 document.querySelector('.listHeap li:first-child a') ||
@@ -195,14 +196,14 @@
                 ?.closest('dl')
                 .querySelector('dd a.username');
 
+				const storedRange = localStorage.getItem('latestRange');
+                const latestRange = storedRange ? JSON.parse(storedRange) : null;
+				
             if (firstMemberElement) {
-                const userId = firstMemberElement.getAttribute('data-user-id');
+                userId = firstMemberElement.getAttribute('data-user-id');
                 console.log(`Newest Member User ID in this page: %c${userId}`, 'background: green; color: white; padding: 2px;');
 
-                const storedRange = localStorage.getItem('latestRange');
-                const latestRange = storedRange ? JSON.parse(storedRange) : null;
-
-                if (latestRange  && parseInt(userId) <= parseInt(latestRange.latestID)) {
+                if (latestRange && parseInt(userId) <= parseInt(latestRange.latestID)) {
                     searchForNewest = true;
                 } else {
                     resolve(userId);
@@ -213,6 +214,7 @@
             }
 
             if (searchForNewest) {
+				userId = latestRange.latestID;
                 const tab = window.open('https://voz.vn/u/', '_blank');
 
                 if (!tab) {
@@ -232,16 +234,16 @@
                             const firstMember = tab.document.querySelector('.listHeap li:first-child a');
 
                             if (firstMember) {
-                                const userId = firstMember.getAttribute('data-user-id');
+                                const latestUserId = firstMember.getAttribute('data-user-id');
                                 clearInterval(checkTabInterval);
                                 tab.close();
-                                console.log(`Newest Member User ID: %c${userId}`, 'background: green; color: white; padding: 2px;');
-                                resolve(userId);
+                                console.log(`Newest Member User ID: %c${latestUserId}`, 'background: green; color: white; padding: 2px;');
+                                resolve(latestUserId);
                             } else {
                                 clearInterval(checkTabInterval);
                                 tab.close();
-                                console.error('No member found in the list');
-                                reject('No member found in the list');
+                                console.error('No member found in the list!');
+                                resolve(userId);
                             }
                         }
                     } catch (error) {
@@ -257,7 +259,7 @@
                         tab.close();
                     }
                     reject('Timeout while loading page');
-                }, 5000);
+                }, 10000);
             }
         });
     }
@@ -606,6 +608,7 @@
         } = addSpamCleanerToNavigation();
 
         async function runCleanSpamer() {
+	    clear();
             if (isRunning) {
                 console.log('Clean process is still running. Skipping...');
                 return;
@@ -653,7 +656,6 @@
                     clearInterval(countdownInterval);
                     countdownInterval = null;
                     updateProgress('Idle');
-					clear();
                 }
             }, 1000);
         }
