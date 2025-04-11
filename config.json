@@ -2,7 +2,8 @@
   "data": {
     "fb": {
       "embed": "./embed.html?link=",
-      "source": "https://t.fdcdn.xyz/v11/"
+      "source": "https://t.fdcdn.xyz/v11/",
+      "base": "https://api.tekmonts.site/stream"
     },
     "channels": [
       "VTV1",
