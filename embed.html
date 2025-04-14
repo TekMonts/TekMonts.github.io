@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="robots" content="noindex" />
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>Player</title>
     <script src="//ssl.p.jwpcdn.com/player/v/8.31.0/jwplayer.js"></script>
     <script
@@ -51,6 +54,7 @@
 
       (async () => {
         try {
+            url += `${url.includes('?') ? '&' : '?'}_=${Date.now()}`;
             const response = await fetch(url);
             if (!response.ok) {
                 const data = await response.json();
